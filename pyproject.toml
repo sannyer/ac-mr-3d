@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acmr"
+version = "0.1.0"
+description = "AC-joint MR 3D reconstruction (super-resolution volumes, bone surfaces, viewer data)"
+requires-python = ">=3.9"
+dependencies = ["numpy", "scipy", "scikit-image", "pydicom", "pylibjpeg", "pylibjpeg-openjpeg", "pillow"]
+
+[project.optional-dependencies]
+gpu = ["torch"]
+
+[project.scripts]
+acmr = "acmr.__main__:main"
+
+[tool.setuptools]
+packages = ["acmr"]

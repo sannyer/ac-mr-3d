@@ -1,0 +1,8 @@
+numpy
+scipy
+scikit-image
+pydicom
+pylibjpeg
+pylibjpeg-openjpeg
+pillow
+# optional, for GPU (CUDA or Apple MPS): torch

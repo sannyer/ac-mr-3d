@@ -4,6 +4,11 @@ import numpy as np
 from .geometry import slice_world, grid_axis
 from scipy import ndimage as ndi
 
+# Sphere read at the v4.1 review from the upper cortex arcs of the full contour set (viewer frame, mm). A fit to the
+# first-pass contours alone underestimates it (they cover only the cap above the physeal scar), so this curated value
+# is the default prior; fit_sphere() is still logged as a check.
+SPHERE = (np.array([-13.3, -38.0, -10.0]), 19.0)
+
 
 def fit_sphere(stacks, seg):
     P = []

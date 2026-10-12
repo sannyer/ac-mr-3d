@@ -59,12 +59,13 @@ def native_atlas(st, size=84.0, px=240, zmax=40.0, cols=6, q=85):
 
 
 def viewer_data(pd, fat, lab, meshes, meas, natives):
-    sl = tuple(slice(CROP_LO[i], CROP_LO[i] + CROP_DIMS[i]) for i in range(3))
-    assert lab.sum() == lab[sl].sum(), 'labels outside the viewer crop'
+    idx = np.argwhere(lab > 0)  # the published box, grown if the labels reach beyond it
+    lo = np.minimum(CROP_LO, idx.min(0)); hi = np.maximum(CROP_LO + CROP_DIMS, idx.max(0) + 1)
+    sl = tuple(slice(lo[i], hi[i]) for i in range(3))
     T = lambda a: np.ascontiguousarray(a[sl].transpose(2, 1, 0)).ravel()
     u8 = lambda a: (np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8)
     D = ndi.distance_transform_edt(~(lab >= 2)) * VOX
-    d = dict(vox=VOX, origin=[float(x) for x in (CROP_LO + 0.5) * VOX - HALF], dims=[int(x) for x in CROP_DIMS],
+    d = dict(vox=VOX, origin=[float(x) for x in (lo + 0.5) * VOX - HALF], dims=[int(x) for x in hi - lo],
              pd=b64(T(u8(pd))), fat=b64(T(u8(fat))), labrle=b64(rle(T(lab))), nearrle=b64(rle(T((D < 3).astype(np.uint8)))),
              meshes={}, meas=meas, natives=natives)
     for b, (V, F) in meshes.items():

@@ -25,3 +25,23 @@ PARAMS = {
 }
 OVR = {}  # per-slice parameter overrides: {'801:16:clav': {'rel': 0.4}}
 BG = {'801:16': [(17, 21)]}  # extra background points (local mm)
+
+
+# Extra points added at the v4 review, where the single hand point above left part of the bone (or the whole slice) out.
+# Same units (local mm in the +-30 mm crop). The humeral head is rebuilt from a sphere prior instead (humerus.py).
+EXTRA = {
+    '601': {
+        'clav': {12: [(33.8, 27.9)], 13: [(32.9, 26.7)], 15: [(43.8, 24.2)]},
+        'acro': {16: [(47.5, 33.8)], 17: [(43.8, 37.1)]},
+        'cora': {8: [(55.4, 47.1)], 9: [(65.4, 42.9)], 10: [(55.0, 40.4)]},
+    },
+    '801': {
+        'clav': {13: [(20.2, 23.2)], 15: [(26.9, 29.2)]},
+        'acro': {16: [(52.2, 36.2)], 17: [(56.2, 39.9)], 18: [(56.5, 39.5)], 20: [(36.2, 37.9)]},
+        'cora': {10: [(16.2, 42.9)], 11: [(13.5, 43.9)], 12: [(12.5, 44.5)], 13: [(5.2, 47.5)], 14: [(-0.1, 55.2)]},
+    },
+}
+for _s, _bb in EXTRA.items():
+    for _b, _kk in _bb.items():
+        for _k, _pts in _kk.items():
+            SEEDS[_s].setdefault(_b, {}).setdefault(_k, []).extend(_pts)

@@ -22,4 +22,4 @@ Koordináták (minden generált adatban): mm, **x = beteg bal oldala felé, y = 
 - `measurements.json`: legkisebb AC-rés, CC-távolság, felső/alsó lépcső, a mért pontok és a humerusfej-gömb. Geometriai mérés, nem lelet.
 
 ## `viewer/ac3d_data.js`
-`window.AC3D = {...}`: a néző kivágott (157×134×113 voxel) uint8 térfogatai base64-ben `[z][y][x]` sorrendben (`pd`, `fat`), futáshossz-kódolt címkék (`labrle`, `nearrle`: uint32 párok érték, hossz), hálók (`v` float32, `f` uint16), mérések, és sorozatonként az eredeti szeletek JPEG-atlasza (`natives`: 84 mm-es kivágás, 240 px; `o` a csempe sarka, `r`, `c` a sor/oszlop irány a referencia-keretben).
+`window.AC3D = {...}`: a néző kivágott (alapból 157×134×113 voxel, ha a címkék kilógnak, nagyobb) uint8 térfogatai base64-ben `[z][y][x]` sorrendben (`pd`, `fat`), futáshossz-kódolt címkék (`labrle`, `nearrle`: uint32 párok érték, hossz), hálók (`v` float32, `f` uint16), mérések, és sorozatonként az eredeti szeletek JPEG-atlasza (`natives`: 84 mm-es kivágás, 240 px; `o` a csempe sarka, `r`, `c` a sor/oszlop irány a referencia-keretben).

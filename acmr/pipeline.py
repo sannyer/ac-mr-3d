@@ -52,19 +52,21 @@ def stage_contours(c):
     c.log('initial contours from the hand-read seeds (601, 801)')
     seg, info = seg2d.initial(S)
     phis = _fuse_all(c, seg, info, seg2d.BONES, lam=0.4)
-    for rnd in (1, 2):
+    for rnd, kw in ((1, dict(lam=0.4)), (2, dict(lam=1.0, smooth=1.2))):
         lab = fuse.labels_from_phis(phis)
         c.log(f'refinement {rnd}: contours on every slice of all six series')
         seg, info = seg2d.refine(S, lab)
-        phis = _fuse_all(c, seg, info, seg2d.BONES, lam=1.0, smooth=1.2)
+        phis = _fuse_all(c, seg, info, seg2d.BONES, **kw)
     c.save('contours', dict(seg=seg, info=info, phis=phis))
 
 
 def stage_humerus(c):
     S = c.stacks
     d = c.load('contours'); seg, info, phis = d['seg'], d['info'], d['phis']
-    cen, r, res = humerus.fit_sphere(S, seg)
-    c.log(f'humeral head sphere: centre {np.round(cen, 1)} r {r:.1f} mm (median residual {res:.2f} mm)')
+    fc, fr, res = humerus.fit_sphere(S, seg)
+    c.log(f'sphere fitted to the current contours: centre {np.round(fc, 1)} r {fr:.1f} mm (median residual {res:.2f} mm)')
+    cen, r = humerus.SPHERE
+    c.log(f'humeral head prior: centre {cen} r {r} mm')
     lab = humerus.ball_prior(fuse.labels_from_phis(phis), cen, r)
     sh, ih = seg2d.refine(S, lab, ['hum'], ero=3.0, dil=4.0)
     ph = fuse.fuse_bone(S, sh, ih, 'hum', lam=1.0, iters=120, smooth=1.0, B=c.B, log=c.log)[0]
